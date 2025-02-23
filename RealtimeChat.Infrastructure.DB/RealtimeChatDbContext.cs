@@ -2,13 +2,17 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using StrictId.EFCore;
+using RealtimeChat.Persistence.DB;
 
 namespace RealtimeChat.Infrastructure.DB;
 
 public class RealtimeChatDbContext(DbContextOptions<RealtimeChatDbContext> dbContextOptions)
-    : IdentityDbContext(dbContextOptions)
+    : IdentityDbContext<ApplicationUser>(dbContextOptions)
 {
+    public DbSet<ChatRoomEntity> ChatRooms { get; set; } = null!;
+    public DbSet<MessageEntity> Messages { get; set; } = null!;
+    public DbSet<ChatRoomParticipantEntity> ChatRoomParticipants { get; set; } = null!;
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         optionsBuilder.UseExceptionProcessor();
@@ -19,17 +23,41 @@ public class RealtimeChatDbContext(DbContextOptions<RealtimeChatDbContext> dbCon
     {
         base.OnModelCreating(builder);
         
-        builder.Entity<IdentityUser>().ToTable("users");
+        builder.Entity<ApplicationUser>().ToTable("users");
         builder.Entity<IdentityRole>().ToTable("roles");
         builder.Entity<IdentityUserToken<string>>().ToTable("user_tokens");
         builder.Entity<IdentityUserRole<string>>().ToTable("user_roles");
         builder.Entity<IdentityRoleClaim<string>>().ToTable("role_claims");
         builder.Entity<IdentityUserClaim<string>>().ToTable("user_claims");
         builder.Entity<IdentityUserLogin<string>>().ToTable("user_logins");
-    }
+        
+        builder.Entity<ChatRoomParticipantEntity>()
+            .HasKey(crp => crp.Id);
 
-    protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
-    {
-        configurationBuilder.ConfigureStrictId();
+        builder.Entity<ChatRoomParticipantEntity>()
+            .HasOne(crp => crp.ChatRoom)
+            .WithMany(cr => cr.ChatRoomParticipants)
+            .HasForeignKey(crp => crp.ChatRoomId);
+
+        builder.Entity<ChatRoomParticipantEntity>()
+            .HasOne(crp => crp.User)
+            .WithMany(u => u.ChannelParticipants)
+            .HasForeignKey(crp => crp.UserId);
+        
+        builder.Entity<ChatRoomEntity>()
+            .HasKey(cr => cr.Id);
+
+        builder.Entity<ChatRoomEntity>()
+            .HasMany(cr => cr.Messages)
+            .WithOne(m => m.ChatRoom)
+            .HasForeignKey(m => m.ChatRoomId);
+        
+        builder.Entity<MessageEntity>()
+            .HasKey(m => m.Id);
+
+        builder.Entity<MessageEntity>()
+            .HasOne(m => m.User)
+            .WithMany(u => u.Messages)
+            .HasForeignKey(m => m.UserId);
     }
 }

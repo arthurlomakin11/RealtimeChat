@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net9.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\RealtimeChat.Domain\RealtimeChat.Domain.csproj" />
+      <ProjectReference Include="..\RealtimeChat.Infrastructure.DB\RealtimeChat.Infrastructure.DB.csproj" />
+      <ProjectReference Include="..\RealtimeChat.Persistence.DB\RealtimeChat.Persistence.DB.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="AutoMapper" Version="14.0.0" />
+    </ItemGroup>
+
+</Project>

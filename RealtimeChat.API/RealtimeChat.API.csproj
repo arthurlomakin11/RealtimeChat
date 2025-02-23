@@ -20,7 +20,6 @@
         </PackageReference>
         <PackageReference Include="Microsoft.Extensions.Configuration" Version="9.0.0" />
         <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.2" />
-        <PackageReference Include="StrictId.HotChocolate" Version="1.1.0" />
         <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="7.2.0" />
         <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="7.2.0" />
         <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="7.2.0" />
@@ -35,6 +34,9 @@
     <ItemGroup>
       <ProjectReference Include="..\RealtimeChat.Infrastructure.DB.Migrations\RealtimeChat.Infrastructure.DB.Migrations.csproj" />
       <ProjectReference Include="..\RealtimeChat.Infrastructure.DB\RealtimeChat.Infrastructure.DB.csproj" />
+      <ProjectReference Include="..\RealtimeChat.Infrastructure.GraphQL\RealtimeChat.Infrastructure.GraphQL.csproj" />
+      <ProjectReference Include="..\RealtimeChat.Mapping\RealtimeChat.Mapping.csproj" />
+      <ProjectReference Include="..\RealtimeChat.Persistence.Repositories\RealtimeChat.Persistence.Repositories.csproj" />
     </ItemGroup>
 
 </Project>

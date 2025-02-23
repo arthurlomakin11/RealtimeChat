@@ -1,8 +1,12 @@
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using RealtimeChat.GraphQL;
 using RealtimeChat.Infrastructure.DB;
-using StrictId.HotChocolate;
+using RealtimeChat.Mapping;
+using RealtimeChat.Persistence.DB;
+using RealtimeChat.Persistence.GraphQL;
+using RealtimeChat.Persistence.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,12 +26,14 @@ builder.Services.AddCors(options =>
 
 builder.Services
     .AddGraphQLServer()
-    .AddStrictId();
+    .AddQueryType<Query>()
+    .AddType<TextMessageContentGraph>()
+    .AddType<ImageMessageContentGraph>();
 
 builder.Services.AddAuthorizationBuilder();
 
 builder.Services
-    .AddIdentityApiEndpoints<IdentityUser>()
+    .AddIdentityApiEndpoints<ApplicationUser>()
     .AddEntityFrameworkStores<RealtimeChatDbContext>()
     .AddApiEndpoints();
 
@@ -35,9 +41,14 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddDbContext<RealtimeChatDbContext>(optionsBuilder => 
     optionsBuilder.UseNpgsql(
         connectionString, 
-        contextOptionsBuilder => contextOptionsBuilder.MigrationsAssembly("RealtimeChat.Infrastructure.DB.Migrations")
+        contextOptionsBuilder => 
+            contextOptionsBuilder.MigrationsAssembly("RealtimeChat.Infrastructure.DB.Migrations")
     )
 );
+
+builder.Services.AddScoped<IChatRoomRepository, ChatRoomRepository>();
+builder.Services.AddScoped<IMessageRepository, MessageRepository>();
+builder.Services.AddAutoMapper(typeof(DomainToDbMappingProfile), typeof(DomainToGraphQLMappingProfile));
 
 builder.Services.ConfigureApplicationCookie(options =>
 {
@@ -63,7 +74,7 @@ app.UseAuthorization();
 
 app.UseCors();
     
-app.MapGroup("/account").MapIdentityApi<IdentityUser>();
+app.MapGroup("/account").MapIdentityApi<ApplicationUser>();
 
 app.MapPost("/account/logout", async (HttpContext httpContext) =>
 {
