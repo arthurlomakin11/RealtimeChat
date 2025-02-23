@@ -1,9 +1,11 @@
 ﻿namespace RealtimeChat.Persistence.Repositories;
 
-public class ChatRoomRepository(RealtimeChatDbContext dbContext, IMapper mapper) : IChatRoomRepository
+public class ChatRoomRepository(IDbContextFactory<RealtimeChatDbContext> contextFactory, IMapper mapper) 
+    : IChatRoomRepository
 {
     public async Task<ChatRoom> GetByIdAsync(int id)
     {
+        await using var dbContext = await contextFactory.CreateDbContextAsync();
         var entity = await dbContext.ChatRooms
             .Include(cr => cr.Messages)
             .Include(cr => cr.ChatRoomParticipants)
@@ -17,6 +19,7 @@ public class ChatRoomRepository(RealtimeChatDbContext dbContext, IMapper mapper)
 
     public async Task AddAsync(ChatRoom chatRoom)
     {
+        await using var dbContext = await contextFactory.CreateDbContextAsync();
         var entity = mapper.Map<ChatRoomEntity>(chatRoom);
         await dbContext.ChatRooms.AddAsync(entity);
         await dbContext.SaveChangesAsync();

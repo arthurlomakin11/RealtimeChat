@@ -6,10 +6,10 @@ public class ChatRoom
     public string Name { get; }
     
     private readonly List<MessageContent> _messages = [];
-    public IReadOnlyCollection<MessageContent> Messages => _messages.AsReadOnly();
+    public IReadOnlyCollection<MessageContent> Messages => _messages;
     
     private readonly List<ChatRoomParticipant> _participants = [];
-    public IReadOnlyCollection<ChatRoomParticipant> Participants => _participants.AsReadOnly();
+    public IReadOnlyCollection<ChatRoomParticipant> Participants => _participants;
 
     public ChatRoom(int id, string name)
     {
@@ -19,10 +19,18 @@ public class ChatRoom
         Name = name;
     }
 
-    public void AddMessage(MessageContent message)
+    public ChatRoom AddMessage(MessageContent message)
     {
         ArgumentNullException.ThrowIfNull(message);
         _messages.Add(message);
+        return this;
+    }
+    
+    public ChatRoom AddMessages(IEnumerable<MessageContent> messages)
+    {
+        ArgumentNullException.ThrowIfNull(messages);
+        _messages.AddRange(messages);
+        return this;
     }
 
     public void AddParticipant(ChatRoomParticipant participant)

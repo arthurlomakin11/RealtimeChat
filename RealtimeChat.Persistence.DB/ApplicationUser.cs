@@ -2,6 +2,6 @@
 
 public class ApplicationUser: IdentityUser
 {
-    public IReadOnlyCollection<MessageEntity> Messages { get; set; } = [];
-    public IReadOnlyCollection<ChatRoomParticipantEntity> ChannelParticipants { get; set; } = [];
+    public IReadOnlyCollection<MessageEntity> Messages { get; set; } = null!;
+    public IReadOnlyCollection<ChatRoomParticipantEntity> ChannelParticipants { get; set; } = null!;
 }

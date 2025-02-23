@@ -26,6 +26,9 @@ builder.Services.AddCors(options =>
 
 builder.Services
     .AddGraphQLServer()
+    .ModifyRequestOptions(opt => 
+        opt.IncludeExceptionDetails = builder.Environment.IsDevelopment())
+    .RegisterDbContextFactory<RealtimeChatDbContext>()
     .AddQueryType<Query>()
     .AddType<TextMessageContentGraph>()
     .AddType<ImageMessageContentGraph>();
@@ -38,13 +41,16 @@ builder.Services
     .AddApiEndpoints();
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnectionString");
-builder.Services.AddDbContext<RealtimeChatDbContext>(optionsBuilder => 
+builder.Services.AddDbContextFactory<RealtimeChatDbContext>(optionsBuilder =>
+{
     optionsBuilder.UseNpgsql(
-        connectionString, 
-        contextOptionsBuilder => 
-            contextOptionsBuilder.MigrationsAssembly("RealtimeChat.Infrastructure.DB.Migrations")
-    )
-);
+        connectionString,
+        contextOptionsBuilder =>
+        {
+            contextOptionsBuilder.UseQuerySplittingBehavior(QuerySplittingBehavior.SingleQuery);
+            contextOptionsBuilder.MigrationsAssembly("RealtimeChat.Infrastructure.DB.Migrations");
+        });
+});
 
 builder.Services.AddScoped<IChatRoomRepository, ChatRoomRepository>();
 builder.Services.AddScoped<IMessageRepository, MessageRepository>();

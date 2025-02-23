@@ -12,12 +12,17 @@ public class DomainToDbMappingProfile : Profile
         // ChatRoom
         CreateMap<ChatRoom, ChatRoomEntity>()
             .ForMember(dest => dest.Messages, 
-                opt => opt.Ignore())
+                opt => 
+                    opt.MapFrom(src => src.Messages))
             .ForMember(dest => dest.ChatRoomParticipants, 
-                opt => opt.Ignore());
-
+                opt => 
+                    opt.MapFrom(src => src.Participants));
+        
         CreateMap<ChatRoomEntity, ChatRoom>()
-            .ConstructUsing(src => new ChatRoom(src.Id, src.Name));
+            .ConstructUsing((src, context) => new ChatRoom(src.Id, src.Name)
+                .AddMessages(src.Messages.Select(m => 
+                    context.Mapper.Map<MessageContent>(m)))
+            );
 
         // Message
         CreateMap<MessageContent, MessageEntity>()
@@ -39,12 +44,12 @@ public class DomainToDbMappingProfile : Profile
 
         // ChatRoomParticipant
         CreateMap<ChatRoomParticipant, ChatRoomParticipantEntity>()
-            .ForMember(dest => dest.ChatRoomParticipantId, 
+            .ForMember(dest => dest.Id, 
                 opt => 
                     opt.MapFrom(src => src.Id));
 
         CreateMap<ChatRoomParticipantEntity, ChatRoomParticipant>()
             .ConstructUsing(src => 
-                new ChatRoomParticipant(src.ChatRoomParticipantId, src.ChatRoomId, src.UserId));
+                new ChatRoomParticipant(src.Id, src.ChatRoomId, src.UserId));
     }
 }

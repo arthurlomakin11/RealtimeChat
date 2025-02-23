@@ -3,7 +3,6 @@
 public class ChatRoomParticipantEntity
 {
     public int Id { get; set; }
-    public int ChatRoomParticipantId { get; set; }
     public int ChatRoomId { get; set; }
     public ChatRoomEntity ChatRoom { get; set; } = null!;
     public string UserId { get; set; } = string.Empty;
