@@ -18,6 +18,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RealtimeChat.Persistence.Re
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RealtimeChat.Infrastructure.GraphQL", "RealtimeChat.Infrastructure.GraphQL\RealtimeChat.Infrastructure.GraphQL.csproj", "{EDE16214-EFBD-4C96-973A-2B10F675B131}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RealtimeChat.Utils", "RealtimeChat.Utils\RealtimeChat.Utils.csproj", "{271F16F3-2B63-4868-B31B-25567E7C6A94}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -60,5 +62,9 @@ Global
 		{EDE16214-EFBD-4C96-973A-2B10F675B131}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EDE16214-EFBD-4C96-973A-2B10F675B131}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EDE16214-EFBD-4C96-973A-2B10F675B131}.Release|Any CPU.Build.0 = Release|Any CPU
+		{271F16F3-2B63-4868-B31B-25567E7C6A94}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{271F16F3-2B63-4868-B31B-25567E7C6A94}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{271F16F3-2B63-4868-B31B-25567E7C6A94}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{271F16F3-2B63-4868-B31B-25567E7C6A94}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

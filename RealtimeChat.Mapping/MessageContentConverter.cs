@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Newtonsoft.Json;
 using RealtimeChat.Domain;
+using RealtimeChat.Utils;
 
 namespace RealtimeChat.Mapping;
 
@@ -10,15 +11,14 @@ public class MessageContentConverter : ITypeConverter<string, MessageContent>
     {
         if (string.IsNullOrEmpty(source)) throw new ArgumentException("ContentJson is empty", nameof(source));
 
-        var messageContent = JsonConvert.DeserializeObject<MessageContent>(source, 
-            new JsonSerializerSettings
+        var messageContent = source.FromJson<MessageContent>(new JsonSerializerSettings
+        {
+            TypeNameHandling = TypeNameHandling.Auto,
+            Converters = new List<JsonConverter>
             {
-                TypeNameHandling = TypeNameHandling.Auto,
-                Converters = new List<JsonConverter>
-                {
-                    JsonConverters.GetJsonSubTypesConverter()
-                }
-            });
+                JsonConverters.GetJsonSubTypesConverter()
+            }
+        });
             
         if (messageContent == null) throw new Exception("Failed to deserialize MessageContent");
 

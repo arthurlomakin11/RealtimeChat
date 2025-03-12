@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using RealtimeChat.Domain;
 using RealtimeChat.Persistence.DB;
+using RealtimeChat.Utils;
 
 namespace RealtimeChat.Mapping;
 
@@ -27,11 +28,10 @@ public class DomainToDbMappingProfile : Profile
             .ForMember(dest => dest.ContentJson,
                 opt => 
                     opt.MapFrom(src => 
-                        JsonConvert.SerializeObject(src, 
-                            new JsonSerializerSettings
-                            {
-                                TypeNameHandling = TypeNameHandling.Auto
-                            })));
+                        src.ToJson(new JsonSerializerSettings
+                        {
+                            TypeNameHandling = TypeNameHandling.Auto
+                        })));
 
         CreateMap<MessageEntity, Message>()
             .ForMember(dest => dest.SenderId, 
@@ -40,15 +40,14 @@ public class DomainToDbMappingProfile : Profile
             .ForMember(dest => dest.Content, 
                 opt => 
                     opt.MapFrom(src => 
-                        JsonConvert.DeserializeObject<MessageContent>(src.ContentJson,
-                            new JsonSerializerSettings
+                        src.ContentJson.FromJson<MessageContent>(new JsonSerializerSettings
+                        {
+                            TypeNameHandling = TypeNameHandling.Auto,
+                            Converters = new List<JsonConverter>
                             {
-                                TypeNameHandling = TypeNameHandling.Auto,
-                                Converters = new List<JsonConverter>
-                                {
-                                    JsonConverters.GetJsonSubTypesConverter()
-                                }
-                            })));
+                                JsonConverters.GetJsonSubTypesConverter()
+                            }
+                        })));
 
         // ChatRoomParticipant
         CreateMap<ChatRoomParticipant, ChatRoomParticipantEntity>()
