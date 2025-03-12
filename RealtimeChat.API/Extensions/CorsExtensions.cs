@@ -7,7 +7,7 @@ public static class CorsExtensions
         builder.Services.AddCors(options => 
             options.AddDefaultPolicy(corsPolicyBuilder =>
             {
-                corsPolicyBuilder.WithOrigins("http://localhost:5173")
+                corsPolicyBuilder.WithOrigins(builder.Configuration.GetValue<string>("AllowCorsAddress")!)
                     .AllowAnyHeader()
                     .AllowAnyMethod()
                     .AllowCredentials();

@@ -4,9 +4,9 @@ using RealtimeChat.Persistence.GraphQL;
 
 namespace RealtimeChat.Mapping;
 
-public class DomainToGraphQLMappingProfile : Profile
+public class DomainToGraphQlMappingProfile : Profile
 {
-    public DomainToGraphQLMappingProfile()
+    public DomainToGraphQlMappingProfile()
     {
         // ChatRoom
         CreateMap<ChatRoom, ChatRoomGraph>()

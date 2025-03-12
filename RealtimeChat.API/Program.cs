@@ -10,12 +10,11 @@ builder.AddDbContext();
 builder.AddGraphQlServer();
 builder.AddAuth();
 builder.AddCookies();
+builder.AddLogging();
 
 builder.Services.AddScoped<IChatRoomRepository, ChatRoomRepository>();
 builder.Services.AddScoped<IMessageRepository, MessageRepository>();
-builder.Services.AddAutoMapper(typeof(DomainToDbMappingProfile), typeof(DomainToGraphQLMappingProfile));
-
-builder.Logging.SetMinimumLevel(LogLevel.Debug);
+builder.Services.AddAutoMapper(typeof(DomainToDbMappingProfile), typeof(DomainToGraphQlMappingProfile));
 
 var app = builder.Build();
 
