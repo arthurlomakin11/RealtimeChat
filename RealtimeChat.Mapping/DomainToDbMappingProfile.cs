@@ -20,12 +20,10 @@ public class DomainToDbMappingProfile : Profile
         
         CreateMap<ChatRoomEntity, ChatRoom>()
             .ConstructUsing((src, context) => new ChatRoom(src.Id, src.Name)
-                .AddMessages(src.Messages.Select(m => 
-                    context.Mapper.Map<MessageContent>(m)))
-            );
-
+                .AddMessages(src.Messages.Select(m => context.Mapper.Map<Message>(m))));
+        
         // Message
-        CreateMap<MessageContent, MessageEntity>()
+        CreateMap<Message, MessageEntity>()
             .ForMember(dest => dest.ContentJson,
                 opt => 
                     opt.MapFrom(src => 
@@ -35,12 +33,22 @@ public class DomainToDbMappingProfile : Profile
                                 TypeNameHandling = TypeNameHandling.Auto
                             })));
 
-        CreateMap<MessageEntity, MessageContent>()
-            .ConstructUsing(src => JsonConvert.DeserializeObject<MessageContent>(src.ContentJson, 
-                new JsonSerializerSettings
-                {
-                    TypeNameHandling = TypeNameHandling.Auto
-                })!);
+        CreateMap<MessageEntity, Message>()
+            .ForMember(dest => dest.SenderId, 
+                opt => 
+                    opt.MapFrom(src => src.UserId))
+            .ForMember(dest => dest.Content, 
+                opt => 
+                    opt.MapFrom(src => 
+                        JsonConvert.DeserializeObject<MessageContent>(src.ContentJson,
+                            new JsonSerializerSettings
+                            {
+                                TypeNameHandling = TypeNameHandling.Auto,
+                                Converters = new List<JsonConverter>
+                                {
+                                    JsonConverters.GetJsonSubTypesConverter()
+                                }
+                            })));
 
         // ChatRoomParticipant
         CreateMap<ChatRoomParticipant, ChatRoomParticipantEntity>()
@@ -49,7 +57,6 @@ public class DomainToDbMappingProfile : Profile
                     opt.MapFrom(src => src.Id));
 
         CreateMap<ChatRoomParticipantEntity, ChatRoomParticipant>()
-            .ConstructUsing(src => 
-                new ChatRoomParticipant(src.Id, src.ChatRoomId, src.UserId));
+            .ConstructUsing(src => new ChatRoomParticipant(src.Id, src.ChatRoomId, src.UserId));
     }
 }

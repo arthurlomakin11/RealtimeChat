@@ -1,7 +1,9 @@
 ﻿namespace RealtimeChat.Domain;
 
-public abstract record MessageContent;
-
-public record TextMessageContent(string Text) : MessageContent;
-
-public record ImageMessageContent(string Url, string? Caption) : MessageContent;
+public class Message
+{
+    public int Id { get; set; }
+    public DateTime SentAt { get; set; }
+    public string SenderId { get; set; } = null!;
+    public MessageContent Content { get; set; } = null!;
+}

@@ -5,7 +5,6 @@ using RealtimeChat.GraphQL;
 using RealtimeChat.Infrastructure.DB;
 using RealtimeChat.Mapping;
 using RealtimeChat.Persistence.DB;
-using RealtimeChat.Persistence.GraphQL;
 using RealtimeChat.Persistence.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -29,9 +28,7 @@ builder.Services
     .ModifyRequestOptions(opt => 
         opt.IncludeExceptionDetails = builder.Environment.IsDevelopment())
     .RegisterDbContextFactory<RealtimeChatDbContext>()
-    .AddQueryType<Query>()
-    .AddType<TextMessageContentGraph>()
-    .AddType<ImageMessageContentGraph>();
+    .AddQueryType<Query>();
 
 builder.Services.AddAuthorizationBuilder();
 

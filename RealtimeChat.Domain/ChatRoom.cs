@@ -5,8 +5,8 @@ public class ChatRoom
     public int Id { get; }
     public string Name { get; }
     
-    private readonly List<MessageContent> _messages = [];
-    public IReadOnlyCollection<MessageContent> Messages => _messages;
+    private readonly List<Message> _messages = [];
+    public IReadOnlyCollection<Message> Messages => _messages;
     
     private readonly List<ChatRoomParticipant> _participants = [];
     public IReadOnlyCollection<ChatRoomParticipant> Participants => _participants;
@@ -19,14 +19,14 @@ public class ChatRoom
         Name = name;
     }
 
-    public ChatRoom AddMessage(MessageContent message)
+    public ChatRoom AddMessage(Message message)
     {
         ArgumentNullException.ThrowIfNull(message);
         _messages.Add(message);
         return this;
     }
     
-    public ChatRoom AddMessages(IEnumerable<MessageContent> messages)
+    public ChatRoom AddMessages(IEnumerable<Message> messages)
     {
         ArgumentNullException.ThrowIfNull(messages);
         _messages.AddRange(messages);
