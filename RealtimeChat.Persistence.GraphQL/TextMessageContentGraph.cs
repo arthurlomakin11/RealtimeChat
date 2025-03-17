@@ -1,6 +1,6 @@
 ﻿namespace RealtimeChat.Persistence.GraphQL;
 
-public class TextMessageContentGraph
+public class TextMessageContentGraph : IMessageContent
 {
-    public string Text { get; set; } = string.Empty;
+    public required string Text { get; set; }
 }

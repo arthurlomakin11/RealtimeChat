@@ -22,20 +22,20 @@ public class DomainToGraphQlMappingProfile : Profile
         // Message
         CreateMap<Message, MessageGraph>()
             .ForMember(dest => dest.Content, 
-                opt => opt.Ignore());
+                opt => 
+                    opt.MapFrom(src => src.Content));
         
         CreateMap<MessageGraph, Message>()
             .ForMember(dest => dest.Content, 
-                opt => opt.Ignore());
+                opt => 
+                    opt.MapFrom(src => src.Content));
         
         // MessageContent
-        CreateMap<string, MessageContent>()
-            .ConvertUsing<MessageContentConverter>();
+        CreateMap<MessageContent, IMessageContent>()
+            .Include<TextMessageContent, TextMessageContentGraph>()
+            .Include<ImageMessageContent, ImageMessageContentGraph>();
         
         CreateMap<TextMessageContent, TextMessageContentGraph>();
         CreateMap<ImageMessageContent, ImageMessageContentGraph>();
-        
-        CreateMap<TextMessageContentGraph, TextMessageContent>();
-        CreateMap<ImageMessageContentGraph, ImageMessageContent>();
     }
 }
