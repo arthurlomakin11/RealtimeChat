@@ -25,30 +25,47 @@ public class DomainToDbMappingProfile : Profile
         
         // Message
         CreateMap<Message, MessageEntity>()
+            .ForMember(dest => dest.UserId,
+                opt => 
+                    opt.MapFrom(src => src.SenderId))
             .ForMember(dest => dest.ContentJson,
                 opt => 
-                    opt.MapFrom(src => 
-                        src.ToJson(new JsonSerializerSettings
-                        {
-                            TypeNameHandling = TypeNameHandling.Auto
-                        })));
+                    opt.MapFrom(src => src.Content));
 
         CreateMap<MessageEntity, Message>()
             .ForMember(dest => dest.SenderId, 
                 opt => 
                     opt.MapFrom(src => src.UserId))
+            .ForMember(dest => dest.ChatRoomId, 
+                opt => 
+                    opt.MapFrom(src => src.ChatRoomId))
             .ForMember(dest => dest.Content, 
                 opt => 
-                    opt.MapFrom(src => 
-                        src.ContentJson.FromJson<MessageContent>(new JsonSerializerSettings
-                        {
-                            TypeNameHandling = TypeNameHandling.Auto,
-                            Converters = new List<JsonConverter>
-                            {
-                                JsonConverters.GetJsonSubTypesConverter()
-                            }
-                        })));
+                    opt.MapFrom(src => src.ContentJson));
 
+        // MessageContent
+        CreateMap<MessageContent, string>()
+            .ConstructUsing(src => 
+                src.ToJson(new JsonSerializerSettings
+                {
+                    TypeNameHandling = TypeNameHandling.Auto,
+                    Converters = new List<JsonConverter>
+                    {
+                        JsonConverters.GetJsonSubTypesConverter()
+                    }
+                }));
+                
+        CreateMap<string, MessageContent>()
+            .ConstructUsing(src => 
+                src.FromJson<MessageContent>(new JsonSerializerSettings
+                {
+                    TypeNameHandling = TypeNameHandling.Auto,
+                    Converters = new List<JsonConverter>
+                    {
+                        JsonConverters.GetJsonSubTypesConverter()
+                    }
+                }));
+        
         // ChatRoomParticipant
         CreateMap<ChatRoomParticipant, ChatRoomParticipantEntity>()
             .ForMember(dest => dest.Id, 

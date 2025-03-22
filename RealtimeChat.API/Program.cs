@@ -19,6 +19,7 @@ builder.Services.AddAutoMapper(typeof(DomainToDbMappingProfile), typeof(DomainTo
 var app = builder.Build();
 
 app.UseExploreEndpointsForDevMode();
+app.UseWebSockets();
 app.UseCors();
 app.UseAuth();
 app.UseGraphQlServer(args);

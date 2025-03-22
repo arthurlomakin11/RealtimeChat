@@ -1,5 +1,5 @@
-﻿using RealtimeChat.GraphQL;
-using RealtimeChat.Infrastructure.DB;
+﻿using RealtimeChat.Infrastructure.DB;
+using RealtimeChat.Infrastructure.GraphQL;
 using RealtimeChat.Persistence.GraphQL;
 
 namespace RealtimeChat.API;
@@ -14,8 +14,11 @@ public static class GraphQlExtensions
                 opt.IncludeExceptionDetails = builder.Environment.IsDevelopment())
             .RegisterDbContextFactory<RealtimeChatDbContext>()
             .AddQueryType<Query>()
+            .AddMutationType<MessageMutation>()
+            .AddSubscriptionType<MessageSubscription>()
             .AddType<TextMessageContentGraph>()
-            .AddType<ImageMessageContentGraph>();
+            .AddType<ImageMessageContentGraph>()
+            .AddInMemorySubscriptions();
     }
     
     public static void UseGraphQlServer(this WebApplication app, string[] args)
