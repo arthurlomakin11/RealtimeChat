@@ -1,4 +1,6 @@
-﻿namespace RealtimeChat.Persistence.Repositories;
+﻿using RealtimeChat.Domain;
+
+namespace RealtimeChat.Persistence.Repositories;
 
 public interface IMessageRepository
 {
