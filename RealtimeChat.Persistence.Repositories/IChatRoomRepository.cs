@@ -2,6 +2,6 @@
 
 public interface IChatRoomRepository
 {
-    Task<ChatRoom> GetByIdAsync(int id);
+    IQueryable<ChatRoom> GetAllAsync();
     Task AddAsync(ChatRoom chatRoom);
 }

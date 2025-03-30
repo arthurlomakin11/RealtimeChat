@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+
 using RealtimeChat.Domain;
 using RealtimeChat.Persistence.GraphQL;
 
@@ -9,26 +10,12 @@ public class DomainToGraphQlMappingProfile : Profile
     public DomainToGraphQlMappingProfile()
     {
         // ChatRoom
-        CreateMap<ChatRoom, ChatRoomGraph>()
-            .ForMember(dest => dest.Messages, 
-                opt => 
-                    opt.MapFrom(src => src.Messages));
-        
-        CreateMap<ChatRoomGraph, ChatRoom>()
-            .ForMember(dest => dest.Messages, 
-                opt => 
-                    opt.MapFrom(src => src.Messages));
+        CreateMap<ChatRoom, ChatRoomGraph>();
+        CreateMap<ChatRoomGraph, ChatRoom>();
         
         // Message
-        CreateMap<Message, MessageGraph>()
-            .ForMember(dest => dest.Content, 
-                opt => 
-                    opt.MapFrom(src => src.Content));
-        
-        CreateMap<MessageGraph, Message>()
-            .ForMember(dest => dest.Content, 
-                opt => 
-                    opt.MapFrom(src => src.Content));
+        CreateMap<Message, MessageGraph>();
+        CreateMap<MessageGraph, Message>();
         
         // MessageContent
         CreateMap<MessageContent, IMessageContent>()

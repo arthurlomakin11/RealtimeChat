@@ -2,18 +2,22 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using RealtimeChat.Infrastructure.DB;
+using RealtimeChat.Persistence.DB;
 
 #nullable disable
 
 namespace RealtimeChat.Infrastructure.DB.Migrations.Migrations
 {
     [DbContext(typeof(RealtimeChatDbContext))]
-    partial class RealtimeChatDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250324194904_ChangeMessageContentToJson")]
+    partial class ChangeMessageContentToJson
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -329,16 +333,14 @@ namespace RealtimeChat.Infrastructure.DB.Migrations.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("chat_room_id");
 
-                    b.Property<string>("Content")
+                    b.Property<MessageContentEntity>("Content")
                         .IsRequired()
                         .HasColumnType("jsonb")
                         .HasColumnName("content");
 
                     b.Property<DateTime>("SentAt")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp with time zone")
-                        .HasColumnName("sent_at")
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+                        .HasColumnName("sent_at");
 
                     b.Property<string>("UserId")
                         .IsRequired()

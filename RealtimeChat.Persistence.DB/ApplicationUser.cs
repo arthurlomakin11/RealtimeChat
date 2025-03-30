@@ -1,4 +1,6 @@
-﻿namespace RealtimeChat.Persistence.DB;
+﻿using Microsoft.AspNetCore.Identity;
+
+namespace RealtimeChat.Persistence.DB;
 
 public class ApplicationUser: IdentityUser
 {

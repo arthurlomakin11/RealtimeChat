@@ -1,14 +1,41 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
+using HotChocolate;
+using Microsoft.EntityFrameworkCore;
+using RealtimeChat.Domain;
+using RealtimeChat.Infrastructure.DB;
 using RealtimeChat.Persistence.GraphQL;
 using RealtimeChat.Persistence.Repositories;
 
 namespace RealtimeChat.Infrastructure.GraphQL;
 
-public class Query(IChatRoomRepository chatRoomRepository, IMapper mapper)
+public class Query(IMapper mapper)
 {
-    public async Task<ChatRoomGraph> GetChatRoomAsync(int id)
+    public async Task<ChatRoomGraph> GetChatRoom([Service] IChatRoomRepository chatRoomRepository, int roomId)
     {
-        var chatRoomDomain = await chatRoomRepository.GetByIdAsync(id);
-        return mapper.Map<ChatRoomGraph>(chatRoomDomain);
+        var room = await chatRoomRepository
+            .GetAllAsync()
+            .ProjectTo<ChatRoomGraph>(mapper.ConfigurationProvider)
+            .FirstAsync(cr => cr.Id == roomId);
+        
+        return room;
+    }
+    
+    public IQueryable<ChatRoomGraph> GetChatRooms([Service] IChatRoomRepository chatRoomRepository)
+    {
+        var query = chatRoomRepository
+            .GetAllAsync()
+            .ProjectTo<ChatRoomGraph>(mapper.ConfigurationProvider);
+        
+        return query;
+    }
+    
+    public IQueryable<MessageGraph> GetMessages([Service] IMessageRepository messageRepository, int chatRoomId)
+    {
+        return messageRepository
+            .GetAll()
+            .ProjectTo<MessageGraph>(mapper.ConfigurationProvider)
+            .Where(m => m.ChatRoomId == chatRoomId)
+            .OrderBy(m => m.SentAt);
     }
 }

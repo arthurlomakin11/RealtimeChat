@@ -1,5 +1,4 @@
 using RealtimeChat.API;
-using RealtimeChat.Mapping;
 using RealtimeChat.Persistence.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,10 +10,10 @@ builder.AddGraphQlServer();
 builder.AddAuth();
 builder.AddCookies();
 builder.AddLogging();
+builder.AddMapping();
 
 builder.Services.AddScoped<IChatRoomRepository, ChatRoomRepository>();
 builder.Services.AddScoped<IMessageRepository, MessageRepository>();
-builder.Services.AddAutoMapper(typeof(DomainToDbMappingProfile), typeof(DomainToGraphQlMappingProfile));
 
 var app = builder.Build();
 

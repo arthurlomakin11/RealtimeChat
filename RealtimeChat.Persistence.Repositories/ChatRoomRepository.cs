@@ -1,25 +1,20 @@
-﻿namespace RealtimeChat.Persistence.Repositories;
+﻿using AutoMapper.QueryableExtensions;
 
-public class ChatRoomRepository(IDbContextFactory<RealtimeChatDbContext> contextFactory, IMapper mapper) 
+namespace RealtimeChat.Persistence.Repositories;
+
+public class ChatRoomRepository(RealtimeChatDbContext dbContext, IMapper mapper) 
     : IChatRoomRepository
 {
-    public async Task<ChatRoom> GetByIdAsync(int id)
+    public IQueryable<ChatRoom> GetAllAsync()
     {
-        await using var dbContext = await contextFactory.CreateDbContextAsync();
-        var entity = await dbContext.ChatRooms
+        return dbContext.ChatRooms
             .Include(cr => cr.Messages)
             .Include(cr => cr.ChatRoomParticipants)
-            .FirstOrDefaultAsync(cr => cr.Id == id);
-
-        if (entity == null)
-            throw new Exception("ChatRoom not found");
-
-        return mapper.Map<ChatRoom>(entity);
+            .ProjectTo<ChatRoom>(mapper.ConfigurationProvider);
     }
 
     public async Task AddAsync(ChatRoom chatRoom)
     {
-        await using var dbContext = await contextFactory.CreateDbContextAsync();
         var entity = mapper.Map<ChatRoomEntity>(chatRoom);
         await dbContext.ChatRooms.AddAsync(entity);
         await dbContext.SaveChangesAsync();

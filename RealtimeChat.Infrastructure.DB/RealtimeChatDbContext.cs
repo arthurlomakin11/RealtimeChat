@@ -1,8 +1,11 @@
 ﻿using EntityFramework.Exceptions.PostgreSQL;
+
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+
 using RealtimeChat.Persistence.DB;
+using RealtimeChat.Utils;
 
 namespace RealtimeChat.Infrastructure.DB;
 
@@ -23,6 +26,7 @@ public class RealtimeChatDbContext(DbContextOptions<RealtimeChatDbContext> dbCon
     {
         base.OnModelCreating(builder);
         
+        // Identity
         builder.Entity<ApplicationUser>().ToTable("users");
         builder.Entity<IdentityRole>().ToTable("roles");
         builder.Entity<IdentityUserToken<string>>().ToTable("user_tokens");
@@ -31,6 +35,7 @@ public class RealtimeChatDbContext(DbContextOptions<RealtimeChatDbContext> dbCon
         builder.Entity<IdentityUserClaim<string>>().ToTable("user_claims");
         builder.Entity<IdentityUserLogin<string>>().ToTable("user_logins");
         
+        // ChatRoomParticipantEntity
         builder.Entity<ChatRoomParticipantEntity>()
             .HasKey(crp => crp.Id);
 
@@ -44,6 +49,7 @@ public class RealtimeChatDbContext(DbContextOptions<RealtimeChatDbContext> dbCon
             .WithMany(u => u.ChannelParticipants)
             .HasForeignKey(crp => crp.UserId);
         
+        // ChatRoomEntity
         builder.Entity<ChatRoomEntity>()
             .HasKey(cr => cr.Id);
 
@@ -52,6 +58,7 @@ public class RealtimeChatDbContext(DbContextOptions<RealtimeChatDbContext> dbCon
             .WithOne(m => m.ChatRoom)
             .HasForeignKey(m => m.ChatRoomId);
         
+        // MessageEntity
         builder.Entity<MessageEntity>()
             .HasKey(m => m.Id);
 
@@ -59,5 +66,22 @@ public class RealtimeChatDbContext(DbContextOptions<RealtimeChatDbContext> dbCon
             .HasOne(m => m.User)
             .WithMany(u => u.Messages)
             .HasForeignKey(m => m.UserId);
+        
+        builder.Entity<MessageEntity>()
+            .HasOne(m => m.User)
+            .WithMany(u => u.Messages)
+            .HasForeignKey(m => m.UserId);
+        
+        builder.Entity<MessageEntity>()
+            .Property(e => e.SentAt)
+            .HasDefaultValueSql("CURRENT_TIMESTAMP");
+        
+        builder.Entity<MessageEntity>()
+            .Property(e => e.Content)
+            .HasColumnType("jsonb")
+            .HasConversion(v => 
+                    v.ToJson(JsonSettings.MessageContentJsonSettings),
+                v => 
+                    v.FromJson<MessageContentEntity>(JsonSettings.MessageContentJsonSettings));
     }
 }
