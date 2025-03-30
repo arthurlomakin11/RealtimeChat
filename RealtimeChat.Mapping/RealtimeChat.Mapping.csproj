@@ -8,15 +8,12 @@
 
     <ItemGroup>
       <PackageReference Include="AutoMapper" Version="14.0.0" />
-      <PackageReference Include="JsonSubTypes" Version="2.0.1" />
-      <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\RealtimeChat.Domain\RealtimeChat.Domain.csproj" />
       <ProjectReference Include="..\RealtimeChat.Persistence.DB\RealtimeChat.Persistence.DB.csproj" />
       <ProjectReference Include="..\RealtimeChat.Persistence.GraphQL\RealtimeChat.Persistence.GraphQL.csproj" />
-      <ProjectReference Include="..\RealtimeChat.Utils\RealtimeChat.Utils.csproj" />
     </ItemGroup>
 
 </Project>
