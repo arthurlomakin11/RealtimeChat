@@ -1,5 +1,4 @@
 using RealtimeChat.API;
-using RealtimeChat.Persistence.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,9 +10,7 @@ builder.AddAuth();
 builder.AddCookies();
 builder.AddLogging();
 builder.AddMapping();
-
-builder.Services.AddScoped<IChatRoomRepository, ChatRoomRepository>();
-builder.Services.AddScoped<IMessageRepository, MessageRepository>();
+builder.AddDependencyInjectionServices();
 
 var app = builder.Build();
 
