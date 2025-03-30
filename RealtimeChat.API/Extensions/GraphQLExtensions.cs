@@ -23,6 +23,7 @@ public static class GraphQlExtensions
     
     public static void UseGraphQlServer(this WebApplication app, string[] args)
     {
+        app.UseWebSockets();
         app.MapGraphQL().RequireAuthorization();
         app.RunWithGraphQLCommands(args);
     }

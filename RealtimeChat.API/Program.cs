@@ -15,7 +15,6 @@ builder.AddDependencyInjectionServices();
 var app = builder.Build();
 
 app.UseExploreEndpointsForDevMode();
-app.UseWebSockets();
 app.UseCors();
 app.UseAuth();
 app.UseGraphQlServer(args);
