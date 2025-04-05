@@ -1,5 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
+
 using Npgsql;
+
 using RealtimeChat.Infrastructure.DB;
 
 namespace RealtimeChat.API;

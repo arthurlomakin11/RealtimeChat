@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using AutoMapper.EquivalencyExpression;
 using AutoMapper.Extensions.ExpressionMapping;
+
 using RealtimeChat.Infrastructure.DB;
 using RealtimeChat.Mapping;
 
