@@ -17,6 +17,23 @@ public class MessageRepository(RealtimeChatDbContext dbContext, IMapper mapper)
         return dbContext.Messages
             .ProjectTo<Message>(mapper.ConfigurationProvider);
     }
+    
+    public IQueryable<Message> GetFilteredByText(string searchString)
+    {
+        const string contentName = nameof(MessageEntity.Content);
+
+        return dbContext.Messages
+            .Where(m =>
+                EF.Functions.JsonContains(
+                    EF.Property<string>(m, contentName),
+                    """{"Type":"text"}""") &&
+                EF.Functions.ILike(
+                    RealtimeChatDbContext.JsonExtractPathText(
+                        EF.Property<string>(m, contentName), 
+                        nameof(TextMessageContentEntity.Text)),
+                    $"%{searchString}%"))
+            .ProjectTo<Message>(mapper.ConfigurationProvider);
+    }
 
     public async Task<Message> AddAsync(Message message)
     {

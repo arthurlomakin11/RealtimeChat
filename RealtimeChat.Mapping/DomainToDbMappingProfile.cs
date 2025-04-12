@@ -17,7 +17,10 @@ public class DomainToDbMappingProfile : Profile
         CreateMap<Message, MessageEntity>()
             .ForMember(dest => dest.UserId,
                 opt => 
-                    opt.MapFrom(src => src.SenderId));
+                    opt.MapFrom(src => src.SenderId))
+            .ForMember(dest => dest.ContentJson,
+                opt => 
+                    opt.Ignore());
         
         CreateMap<MessageEntity, Message>()
             .ForMember(dest => dest.SenderId, 

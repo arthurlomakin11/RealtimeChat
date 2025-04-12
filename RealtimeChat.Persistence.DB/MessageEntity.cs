@@ -1,9 +1,16 @@
-﻿namespace RealtimeChat.Persistence.DB;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+using RealtimeChat.Utils;
+
+namespace RealtimeChat.Persistence.DB;
 
 public class MessageEntity
 {
     public int Id { get; set; }
     public required MessageContentEntity Content { get; set; }
+    
+    [NotMapped]
+    public string ContentJson => Content.ToJson(JsonSettings.MessageContentJsonSettings);
     public DateTime SentAt { get; set; }
     public string UserId { get; set; } = string.Empty;
     public ApplicationUser User { get; set; } = null!;

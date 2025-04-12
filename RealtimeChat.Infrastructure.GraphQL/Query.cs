@@ -1,9 +1,10 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
+
 using HotChocolate;
+
 using Microsoft.EntityFrameworkCore;
-using RealtimeChat.Domain;
-using RealtimeChat.Infrastructure.DB;
+
 using RealtimeChat.Persistence.GraphQL;
 using RealtimeChat.Persistence.Repositories;
 
@@ -34,6 +35,16 @@ public class Query(IMapper mapper)
     {
         return messageRepository
             .GetAll()
+            .ProjectTo<MessageGraph>(mapper.ConfigurationProvider)
+            .Where(m => m.ChatRoomId == chatRoomId)
+            .OrderBy(m => m.SentAt);
+    }
+    
+    public IQueryable<MessageGraph> GetFilteredMessages([Service] IMessageRepository messageRepository, int chatRoomId,
+        string searchString)
+    {
+        return messageRepository
+            .GetFilteredByText(searchString)
             .ProjectTo<MessageGraph>(mapper.ConfigurationProvider)
             .Where(m => m.ChatRoomId == chatRoomId)
             .OrderBy(m => m.SentAt);

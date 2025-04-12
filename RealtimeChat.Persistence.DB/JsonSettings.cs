@@ -1,8 +1,8 @@
 ﻿using JsonSubTypes;
-using Newtonsoft.Json;
-using RealtimeChat.Persistence.DB;
 
-namespace RealtimeChat.Infrastructure.DB;
+using Newtonsoft.Json;
+
+namespace RealtimeChat.Persistence.DB;
 
 public static class JsonSettings
 {

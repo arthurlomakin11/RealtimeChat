@@ -15,6 +15,10 @@ public class RealtimeChatDbContext(DbContextOptions<RealtimeChatDbContext> dbCon
     public DbSet<ChatRoomEntity> ChatRooms { get; set; } = null!;
     public DbSet<MessageEntity> Messages { get; set; } = null!;
     public DbSet<ChatRoomParticipantEntity> ChatRoomParticipants { get; set; } = null!;
+    
+    [DbFunction("jsonb_extract_path_text", IsBuiltIn = true)]
+    public static string JsonExtractPathText(string jsonb, string path)
+        => throw new NotSupportedException();
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
