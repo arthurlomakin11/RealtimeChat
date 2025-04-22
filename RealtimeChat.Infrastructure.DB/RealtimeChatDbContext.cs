@@ -35,6 +35,5 @@ public class RealtimeChatDbContext(DbContextOptions<RealtimeChatDbContext> dbCon
         builder.ApplyConfiguration(new ChatRoomParticipantEntityConfiguration());
         builder.ApplyConfiguration(new ChatRoomEntityConfiguration());
         builder.ApplyConfiguration(new MessageEntityConfiguration());
-        builder.ApplyConfiguration(new MessageEntityConfiguration());
     }
 }
