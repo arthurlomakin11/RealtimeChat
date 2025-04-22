@@ -22,8 +22,11 @@ public static class DbContextExtensions
                 {
                     contextOptionsBuilder.UseQuerySplittingBehavior(QuerySplittingBehavior.SingleQuery);
                     contextOptionsBuilder.MigrationsAssembly("RealtimeChat.Infrastructure.DB.Migrations");
-                })
-                .UseLoggerFactory(LoggerFactory.Create(loggingBuilder => loggingBuilder.AddConsole()))
+                });
+                
+            if (!builder.Environment.IsDevelopment()) return;
+            
+            optionsBuilder.UseLoggerFactory(LoggerFactory.Create(loggingBuilder => loggingBuilder.AddConsole()))
                 .EnableSensitiveDataLogging()
                 .EnableDetailedErrors();
         });
