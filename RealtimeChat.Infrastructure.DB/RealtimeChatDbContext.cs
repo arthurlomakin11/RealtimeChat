@@ -7,12 +7,13 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 using RealtimeChat.Persistence.DB;
 using RealtimeChat.Persistence.DB.Entities;
+using RealtimeChat.Persistence.DB.Interfaces;
 using RealtimeChat.Utils;
 
 namespace RealtimeChat.Infrastructure.DB;
 
 public class RealtimeChatDbContext(DbContextOptions<RealtimeChatDbContext> dbContextOptions)
-    : IdentityDbContext<ApplicationUser>(dbContextOptions)
+    : IdentityDbContext<ApplicationUser>(dbContextOptions), IRealtimeChatDbContext
 {
     public DbSet<ChatRoomEntity> ChatRooms { get; set; } = null!;
     public DbSet<MessageEntity> Messages { get; set; } = null!;
@@ -26,11 +27,10 @@ public class RealtimeChatDbContext(DbContextOptions<RealtimeChatDbContext> dbCon
         optionsBuilder.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
     }
     
-    private static readonly ValueConverter<MessageContentEntity, string> ContentConverter =
-        new(
-            v => v.ToJson(JsonSettings.MessageContentJsonSettings),
-            v => v.FromJson<MessageContentEntity>(JsonSettings.MessageContentJsonSettings)
-        );
+    private static readonly ValueConverter<MessageContentEntity, string> ContentConverter = new(
+        v => v.ToJson(JsonSettings.MessageContentJsonSettings),
+        v => v.FromJson<MessageContentEntity>(JsonSettings.MessageContentJsonSettings)
+    );
     
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -91,6 +91,7 @@ public class RealtimeChatDbContext(DbContextOptions<RealtimeChatDbContext> dbCon
             .HasColumnType("jsonb")
             .HasConversion(ContentConverter);
         
+        // DB functions
         builder.HasDbFunction(typeof(DatabaseFunctionsExtensions)
                 .GetMethod(nameof(DatabaseFunctionsExtensions.JsonExtractPathText))!)
             .HasName("jsonb_extract_path_text")

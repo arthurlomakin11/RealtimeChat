@@ -8,7 +8,6 @@
 
     <ItemGroup>
       <ProjectReference Include="..\RealtimeChat.Domain\RealtimeChat.Domain.csproj" />
-      <ProjectReference Include="..\RealtimeChat.Infrastructure.DB\RealtimeChat.Infrastructure.DB.csproj" />
       <ProjectReference Include="..\RealtimeChat.Persistence.DB\RealtimeChat.Persistence.DB.csproj" />
     </ItemGroup>
 

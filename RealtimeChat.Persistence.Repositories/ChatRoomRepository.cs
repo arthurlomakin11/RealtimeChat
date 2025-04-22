@@ -4,12 +4,12 @@ using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
 
 using RealtimeChat.Domain.Models;
-using RealtimeChat.Infrastructure.DB;
 using RealtimeChat.Persistence.DB.Entities;
+using RealtimeChat.Persistence.DB.Interfaces;
 
 namespace RealtimeChat.Persistence.Repositories;
 
-public class ChatRoomRepository(RealtimeChatDbContext dbContext, IMapper mapper) 
+public class ChatRoomRepository(IRealtimeChatDbContext dbContext, IMapper mapper) 
     : IChatRoomRepository
 {
     public IQueryable<ChatRoom> GetAllAsync()

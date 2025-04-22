@@ -3,6 +3,7 @@
 using Npgsql;
 
 using RealtimeChat.Infrastructure.DB;
+using RealtimeChat.Persistence.DB.Interfaces;
 
 namespace RealtimeChat.API;
 
@@ -27,6 +28,7 @@ public static class DbContextExtensions
                 .EnableDetailedErrors();
         });
         
+        builder.Services.AddScoped<IRealtimeChatDbContext, RealtimeChatDbContext>();
         builder.Services.AddHostedService<EfCoreWarmupService>();
     }
 }
