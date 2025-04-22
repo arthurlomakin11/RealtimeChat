@@ -1,21 +1,14 @@
-﻿using JsonSubTypes;
-
-using Newtonsoft.Json;
+﻿using System.Text.Json;
+using RealtimeChat.Persistence.DB.Entities;
 
 namespace RealtimeChat.Persistence.DB;
 
 public static class JsonSettings
 {
-    public static readonly JsonSerializerSettings MessageContentJsonSettings = new()
+    public static readonly JsonSerializerOptions MessageContentJsonSettings = new()
     {
-        Converters =
-        [
-            JsonSubtypesConverterBuilder
-                .Of<MessageContentEntity>("Type")
-                .RegisterSubtype<TextMessageContentEntity>("text")
-                .RegisterSubtype<ImageMessageContentEntity>("image")
-                .SerializeDiscriminatorProperty()
-                .Build()
-        ]
+        TypeInfoResolver = MessageJsonContext.Default,
+        PropertyNameCaseInsensitive = true,
+        AllowOutOfOrderMetadataProperties = true
     };
 }

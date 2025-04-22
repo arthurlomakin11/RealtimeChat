@@ -1,4 +1,4 @@
-﻿using RealtimeChat.Domain;
+﻿using RealtimeChat.Domain.Models;
 
 namespace RealtimeChat.Persistence.Repositories;
 

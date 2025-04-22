@@ -3,8 +3,10 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 using RealtimeChat.Persistence.DB;
+using RealtimeChat.Persistence.DB.Entities;
 using RealtimeChat.Utils;
 
 namespace RealtimeChat.Infrastructure.DB;
@@ -15,17 +17,21 @@ public class RealtimeChatDbContext(DbContextOptions<RealtimeChatDbContext> dbCon
     public DbSet<ChatRoomEntity> ChatRooms { get; set; } = null!;
     public DbSet<MessageEntity> Messages { get; set; } = null!;
     public DbSet<ChatRoomParticipantEntity> ChatRoomParticipants { get; set; } = null!;
-    
-    [DbFunction("jsonb_extract_path_text", IsBuiltIn = true)]
-    public static string JsonExtractPathText(string jsonb, string path)
-        => throw new NotSupportedException();
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         optionsBuilder.UseExceptionProcessor();
         optionsBuilder.UseSnakeCaseNamingConvention();
+        
+        optionsBuilder.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
     }
-
+    
+    private static readonly ValueConverter<MessageContentEntity, string> ContentConverter =
+        new(
+            v => v.ToJson(JsonSettings.MessageContentJsonSettings),
+            v => v.FromJson<MessageContentEntity>(JsonSettings.MessageContentJsonSettings)
+        );
+    
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
@@ -83,9 +89,11 @@ public class RealtimeChatDbContext(DbContextOptions<RealtimeChatDbContext> dbCon
         builder.Entity<MessageEntity>()
             .Property(e => e.Content)
             .HasColumnType("jsonb")
-            .HasConversion(v => 
-                    v.ToJson(JsonSettings.MessageContentJsonSettings),
-                v => 
-                    v.FromJson<MessageContentEntity>(JsonSettings.MessageContentJsonSettings));
+            .HasConversion(ContentConverter);
+        
+        builder.HasDbFunction(typeof(DatabaseFunctionsExtensions)
+                .GetMethod(nameof(DatabaseFunctionsExtensions.JsonExtractPathText))!)
+            .HasName("jsonb_extract_path_text")
+            .IsBuiltIn();
     }
 }

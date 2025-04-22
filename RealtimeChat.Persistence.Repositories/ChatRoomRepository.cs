@@ -3,9 +3,9 @@ using AutoMapper.QueryableExtensions;
 
 using Microsoft.EntityFrameworkCore;
 
-using RealtimeChat.Domain;
+using RealtimeChat.Domain.Models;
 using RealtimeChat.Infrastructure.DB;
-using RealtimeChat.Persistence.DB;
+using RealtimeChat.Persistence.DB.Entities;
 
 namespace RealtimeChat.Persistence.Repositories;
 

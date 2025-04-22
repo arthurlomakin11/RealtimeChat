@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using HotChocolate;
 using HotChocolate.Subscriptions;
-using RealtimeChat.Domain;
+using RealtimeChat.Domain.Models;
 using RealtimeChat.Persistence.GraphQL;
 using RealtimeChat.Persistence.Repositories;
 

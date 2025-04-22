@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 
-using RealtimeChat.Domain;
-using RealtimeChat.Persistence.DB;
+using RealtimeChat.Domain.Models;
+using RealtimeChat.Persistence.DB.Entities;
 
 namespace RealtimeChat.Mapping;
 

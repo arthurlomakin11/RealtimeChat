@@ -1,4 +1,4 @@
-﻿namespace RealtimeChat.Domain;
+﻿namespace RealtimeChat.Domain.Models;
 
 public abstract record MessageContent;
 

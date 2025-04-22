@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using RealtimeChat.Infrastructure.DB;
 using RealtimeChat.Persistence.DB;
+using RealtimeChat.Persistence.DB.Entities;
 
 #nullable disable
 

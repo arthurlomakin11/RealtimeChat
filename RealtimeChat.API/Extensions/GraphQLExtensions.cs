@@ -10,6 +10,7 @@ public static class GraphQlExtensions
     {
         builder.Services
             .AddGraphQLServer()
+            .InitializeOnStartup()
             .ModifyRequestOptions(opt => 
                 opt.IncludeExceptionDetails = builder.Environment.IsDevelopment())
             .RegisterDbContextFactory<RealtimeChatDbContext>()

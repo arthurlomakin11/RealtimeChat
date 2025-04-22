@@ -1,6 +1,4 @@
-﻿namespace RealtimeChat.Persistence.DB;
-
-using System.Collections.Generic;
+﻿namespace RealtimeChat.Persistence.DB.Entities;
 
 public class ChatRoomEntity
 {

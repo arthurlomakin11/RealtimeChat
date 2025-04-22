@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 
 using RealtimeChat.Infrastructure.DB;
-using RealtimeChat.Persistence.DB;
+using RealtimeChat.Persistence.DB.Entities;
 
 namespace RealtimeChat.API;
 

@@ -3,9 +3,10 @@ using AutoMapper.QueryableExtensions;
 
 using Microsoft.EntityFrameworkCore;
 
-using RealtimeChat.Domain;
+using RealtimeChat.Domain.Models;
 using RealtimeChat.Infrastructure.DB;
 using RealtimeChat.Persistence.DB;
+using RealtimeChat.Persistence.DB.Entities;
 
 namespace RealtimeChat.Persistence.Repositories;
 
@@ -24,13 +25,11 @@ public class MessageRepository(RealtimeChatDbContext dbContext, IMapper mapper)
 
         return dbContext.Messages
             .Where(m =>
-                EF.Functions.JsonContains(
-                    EF.Property<string>(m, contentName),
-                    """{"Type":"text"}""") &&
+                DatabaseFunctionsExtensions.JsonExtractPathText(
+                    EF.Property<string>(m, contentName), "Type") == "text" &&
                 EF.Functions.ILike(
-                    RealtimeChatDbContext.JsonExtractPathText(
-                        EF.Property<string>(m, contentName), 
-                        nameof(TextMessageContentEntity.Text)),
+                    DatabaseFunctionsExtensions.JsonExtractPathText(
+                        EF.Property<string>(m, contentName), "Text"),
                     $"%{searchString}%"))
             .ProjectTo<Message>(mapper.ConfigurationProvider);
     }

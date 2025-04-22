@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 
-using RealtimeChat.Domain;
+using RealtimeChat.Domain.Models;
 using RealtimeChat.Persistence.GraphQL;
 
 namespace RealtimeChat.Mapping;

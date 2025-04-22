@@ -26,5 +26,7 @@ public static class DbContextExtensions
                 .EnableSensitiveDataLogging()
                 .EnableDetailedErrors();
         });
+        
+        builder.Services.AddHostedService<EfCoreWarmupService>();
     }
 }

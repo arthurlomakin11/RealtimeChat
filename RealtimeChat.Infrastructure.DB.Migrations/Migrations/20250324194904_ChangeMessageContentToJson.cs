@@ -1,5 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
+
 using RealtimeChat.Persistence.DB;
+using RealtimeChat.Persistence.DB.Entities;
 
 #nullable disable
 

@@ -1,4 +1,4 @@
-﻿namespace RealtimeChat.Persistence.DB;
+﻿namespace RealtimeChat.Persistence.DB.Entities;
 
 public class ChatRoomParticipantEntity
 {

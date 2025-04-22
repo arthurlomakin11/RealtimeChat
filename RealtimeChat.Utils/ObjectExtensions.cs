@@ -1,22 +1,23 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json;
 
 namespace RealtimeChat.Utils;
 
 public static class ObjectExtensions
 {
-    public static string ToJson(this object @object, JsonSerializerSettings? settings = null)
+    public static string ToJson(this object @object) => 
+        JsonSerializer.Serialize(@object);
+    public static string ToJson(this object @object, JsonSerializerOptions options) => 
+        JsonSerializer.Serialize(@object, options);
+
+    public static T FromJson<T>(this string jsonString, JsonSerializerOptions? options = null)
     {
-        return settings is not null 
-            ? JsonConvert.SerializeObject(@object, settings)
-            : JsonConvert.SerializeObject(@object);
-    }
-    
-    public static T FromJson<T>(this string jsonString, JsonSerializerSettings? settings = null)
-    {
-        if (string.IsNullOrEmpty(jsonString)) throw new Exception("String can't be null or empty");
+        if (string.IsNullOrEmpty(jsonString))
+        {
+            throw new Exception("String can't be null or empty");
+        }
             
-        return (settings is not null 
-            ? JsonConvert.DeserializeObject<T>(jsonString, settings)
-            : JsonConvert.DeserializeObject<T>(jsonString))!;
+        return (options is not null 
+            ? JsonSerializer.Deserialize<T>(jsonString, options)
+            : JsonSerializer.Deserialize<T>(jsonString))!;
     }
 }
