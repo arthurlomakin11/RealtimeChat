@@ -9,9 +9,10 @@ using RealtimeChat.Persistence.DB.Interfaces;
 
 namespace RealtimeChat.Infrastructure.DB;
 
-public class RealtimeChatDbContext(DbContextOptions<RealtimeChatDbContext> dbContextOptions)
+public class RealtimeChatDbContext(DbContextOptions dbContextOptions)
     : IdentityDbContext<ApplicationUser>(dbContextOptions), IRealtimeChatDbContext
 {
+    public override DbSet<ApplicationUser> Users { get; set; } = null!;
     public DbSet<ChatRoomEntity> ChatRooms { get; set; } = null!;
     public DbSet<MessageEntity> Messages { get; set; } = null!;
     public DbSet<ChatRoomParticipantEntity> ChatRoomParticipants { get; set; } = null!;
