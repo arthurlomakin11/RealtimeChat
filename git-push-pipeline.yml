@@ -20,7 +20,9 @@ steps:
       git fetch origin
       echo "Merging changes from origin/master into local master"
       git merge origin/master --no-edit || (echo "Merge failed, attempting rebase" && git rebase origin/master)
-      displayName: 'Sync with Remote Branch'
+    displayName: 'Sync with Remote Branch'
+    env:
+      GIT_SSL_NO_VERIFY: true
 
   - script: |
       echo "Pushing to GitHub..."
