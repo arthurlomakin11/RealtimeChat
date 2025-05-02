@@ -14,23 +14,25 @@ steps:
     displayName: 'Disable SSL verification for Git'
 
   - checkout: self
+    persistCredentials: true
 
   - script: |
-      git remote set-url origin https://github.com/arthurlomakin11/RealtimeChat.git
-      echo "Fetching the latest changes from origin"
-      git fetch origin
-      echo "Merging changes from origin/master into local master"
-      git merge origin/master --no-edit || (echo "Merge failed, attempting rebase" && git rebase origin/master)
-    displayName: 'Sync with Remote Branch'
-    env:
-      GIT_SSL_NO_VERIFY: true
-
-  - script: |
-      git remote set-url origin https://github.com/arthurlomakin11/RealtimeChat.git
-      echo "Pushing to GitHub..."
-      echo "Current branch: $(Build.SourceBranchName)"
+      git config --global user.email "arthurlomakin11@gmail.com"
+      git config --global user.name "Azure DevOps"
       
-      git push https://$(GITHUB_TOKEN)@github.com/arthurlomakin11/RealtimeChat.git $(Build.SourceBranchName):master
-    displayName: 'Push to GitHub'
+      # Add GitHub as a second remote
+      git remote add github https://$(GITHUB_TOKEN)@github.com/arthurlomakin11/RealtimeChat.git
+      
+      # Fetch from GitHub
+      git fetch github master
+      
+      # Merge or rebase changes
+      git merge github/master --no-edit || git rebase github/master
+      
+      # Push changes back to both repositories
+      git push origin master
+      git push github master
+    displayName: 'Sync with GitHub'
     env:
+      GITHUB_TOKEN: $(GITHUB_TOKEN)
       GIT_SSL_NO_VERIFY: true
