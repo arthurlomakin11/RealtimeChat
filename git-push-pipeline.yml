@@ -8,7 +8,6 @@ pool:
 
 variables:
   - group: GitHubSecrets
-  - GIT_SSL_NO_VERIFY: true
 steps:
   - script: git config --global http.sslVerify false
     displayName: 'Disable SSL verification for Git'
@@ -20,3 +19,5 @@ steps:
       git remote add github https://$(GITHUB_TOKEN)@github.com/arthurlomakin11/RealtimeChat.git
       git push github master
     displayName: 'Push to GitHub'
+    env:
+      GIT_SSL_NO_VERIFY: true
