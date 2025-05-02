@@ -15,26 +15,21 @@ steps:
   fetchDepth: 0  # Get full history for proper merging
 
 - script: |
-    # Configure git identity
-    git config --global user.email "devops@company.com"
+    git config --global user.email "arthurlomakin11@gmail.com"
     git config --global user.name "Azure DevOps Sync"
     
-    # Add GitHub remote (ignore if already exists)
-    git remote add github https://$(GITHUB_TOKEN)@github.com/arthurlomakin11/RealtimeChat.git || true
+    git remote remove github || echo "Remote did not exist"
+    git remote add github https://$(GITHUB_TOKEN)@github.com/arthurlomakin11/RealtimeChat.git
+    
     git fetch github
     
-    # Attempt graceful merge first
-    if git merge github/master --no-edit --no-commit; then
-      echo "Merge completed successfully"
-      git commit -m "Auto-merge from GitHub [skip ci]"
-    else
-      # Fallback to force push if merge fails
-      echo "##vso[task.logissue type=warning]Merge conflict detected - overriding with Azure changes"
+    git merge github/master --no-edit --no-commit || (
+      echo ##vso[task.logissue type=warning]Merge conflict detected - overriding with Azure changes
       git merge --abort
       git reset --hard HEAD
-    fi
+    )
     
-    # Push changes (will be force push if merge was aborted)
+    git commit -m "Auto-merge from GitHub [skip ci]" || echo "No merge commit needed"
     git push github HEAD:master --force-with-lease
   displayName: 'Sync to GitHub (merge with force fallback)'
   env:
