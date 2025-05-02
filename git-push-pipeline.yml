@@ -8,14 +8,15 @@ pool:
 
 variables:
   - group: GitHubSecrets
+
 steps:
   - script: git config --global http.sslVerify false
     displayName: 'Disable SSL verification for Git'
 
+  - checkout: self
+
   - script: |
       echo "Pushing to GitHub..."
-      git clone https://desktop-ktppcj0:8443/Default/RealtimeChat/_git/RealtimeChat repo
-      cd repo
       git remote add github https://$(GITHUB_TOKEN)@github.com/arthurlomakin11/RealtimeChat.git
       git push github master
     displayName: 'Push to GitHub'
