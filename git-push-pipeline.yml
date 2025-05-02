@@ -17,6 +17,7 @@ steps:
 
   - script: |
       echo "Pushing to GitHub..."
+      echo "Current branch: $(Build.SourceBranchName)"
       
       git push https://$(GITHUB_TOKEN)@github.com/arthurlomakin11/RealtimeChat.git $(Build.SourceBranchName):master
     displayName: 'Push to GitHub'
