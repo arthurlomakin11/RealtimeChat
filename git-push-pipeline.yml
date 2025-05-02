@@ -16,6 +16,7 @@ steps:
   - checkout: self
 
   - script: |
+      git remote set-url origin https://github.com/arthurlomakin11/RealtimeChat.git
       echo "Fetching the latest changes from origin"
       git fetch origin
       echo "Merging changes from origin/master into local master"
@@ -25,6 +26,7 @@ steps:
       GIT_SSL_NO_VERIFY: true
 
   - script: |
+      git remote set-url origin https://github.com/arthurlomakin11/RealtimeChat.git
       echo "Pushing to GitHub..."
       echo "Current branch: $(Build.SourceBranchName)"
       
