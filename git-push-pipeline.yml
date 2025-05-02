@@ -17,8 +17,8 @@ steps:
 
   - script: |
       echo "Pushing to GitHub..."
-      git remote add github https://$(GITHUB_TOKEN)@github.com/arthurlomakin11/RealtimeChat.git
-      git push github master
+      
+      git push https://$(GITHUB_TOKEN)@github.com/arthurlomakin11/RealtimeChat.git $(Build.SourceBranchName):master
     displayName: 'Push to GitHub'
     env:
       GIT_SSL_NO_VERIFY: true
