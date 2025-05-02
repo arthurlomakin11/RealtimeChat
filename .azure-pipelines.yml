@@ -7,6 +7,10 @@ pool:
   name: Default
 
 steps:
+  - script: |
+      git config --global http.sslVerify false
+    displayName: 'Disable SSL verification for Git'
+
   - task: UseDotNet@2
     inputs:
       packageType: 'sdk'
