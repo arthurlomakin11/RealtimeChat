@@ -6,8 +6,12 @@ trigger:
 pool:
   name: Default
 
+variables:
+  GIT_SSL_NO_VERIFY: true
+
 steps:
   - script: |
+      echo "Disabling SSL verification for git"
       git config --global http.sslVerify false
     displayName: 'Disable SSL verification for Git'
 
