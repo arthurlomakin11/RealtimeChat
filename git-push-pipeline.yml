@@ -16,6 +16,13 @@ steps:
   - checkout: self
 
   - script: |
+      echo "Fetching the latest changes from origin"
+      git fetch origin
+      echo "Merging changes from origin/master into local master"
+      git merge origin/master --no-edit || (echo "Merge failed, attempting rebase" && git rebase origin/master)
+      displayName: 'Sync with Remote Branch'
+
+  - script: |
       echo "Pushing to GitHub..."
       echo "Current branch: $(Build.SourceBranchName)"
       
