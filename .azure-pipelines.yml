@@ -6,11 +6,19 @@ trigger:
 pool:
   name: Default
 
+variables:
+  GIT_SSL_NO_VERIFY: true
+
 steps:
+  - script: |
+      echo "Disabling SSL verification for git"
+      git config --global http.sslVerify false
+    displayName: 'Disable SSL verification for Git'
+
   - task: UseDotNet@2
     inputs:
       packageType: 'sdk'
-      version: '9.0.2'
+      version: '9.0.203'
 
   - task: DotNetCoreCLI@2
     inputs:
