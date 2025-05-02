@@ -1,0 +1,21 @@
+pool:
+  name: Default
+
+variables:
+  GIT_SSL_NO_VERIFY: true
+
+steps:
+  - script: |
+      echo "Disabling SSL verification for git"
+      git config --global http.sslVerify false
+    displayName: 'Disable SSL verification for Git'
+
+  - script: |
+      git config --global user.name "arthurlomakin11"
+      git config --global user.email "arthurlomakin11@gmail.com"
+    displayName: 'Configure Git user'
+
+  - script: |
+      cd $(Build.SourcesDirectory)
+      git push origin master
+    displayName: 'Push changes to GitHub'
