@@ -10,9 +10,6 @@ variables:
   - group: GitHubSecrets
 
 steps:
-  - script: git config --global http.sslVerify false
-    displayName: 'Disable SSL verification for Git'
-
   - checkout: self
     persistCredentials: true
 
@@ -35,4 +32,3 @@ steps:
     displayName: 'Sync with GitHub'
     env:
       GITHUB_TOKEN: $(GITHUB_TOKEN)
-      GIT_SSL_NO_VERIFY: true
