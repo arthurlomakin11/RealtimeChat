@@ -1,3 +1,6 @@
+variables:
+  - group: GitHubSecrets
+
 steps:
   - checkout: none  # Handle cloning manually
 
