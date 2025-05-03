@@ -1,0 +1,22 @@
+steps:
+  - checkout: none  # Handle cloning manually
+
+  - script: |    
+      git clone -b master --single-branch https://desktop-ktppcj0:8443/Default/RealtimeChat/_git/RealtimeChat azure-repo
+      cd azure-repo
+      git remote add github https://$(GITHUB_TOKEN)@github.com/arthurlomakin11/RealtimeChat.git
+      git fetch github
+      
+      if git merge github/master --no-edit --no-commit; then
+        echo "Merge completed successfully"
+        git commit -m "Auto-merge from GitHub [skip ci]"
+        git push origin master
+      else
+        echo "##vso[task.logissue type=warning]Merge conflict detected - forcing GitHub changes"
+        git merge --abort
+        git reset --hard github/master
+        git push origin master --force
+      fi
+    displayName: 'Sync from GitHub (merge or force)'
+    env:
+      GITHUB_TOKEN: $(GITHUB_TOKEN)
