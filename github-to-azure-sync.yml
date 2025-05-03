@@ -1,12 +1,15 @@
 steps:
-  - checkout: none  # Handle cloning manually
+  - checkout: self
+    persistCredentials: true 
+    fetchDepth: 0 
 
-  - script: |    
-      git clone -b master --single-branch https://desktop-ktppcj0:8443/Default/RealtimeChat/_git/RealtimeChat azure-repo
-      cd azure-repo
-      git remote add github https://$(GITHUB_TOKEN)@github.com/arthurlomakin11/RealtimeChat.git
+  - script: |
+      git config --global user.email "arthurlomakin11@gmail.com"
+      git config --global user.name "Azure DevOps Sync"
+        
+      git remote add github https://$(GITHUB_TOKEN)@github.com/arthurlomakin11/RealtimeChat.git || echo "Remote already exists"
       git fetch github
-      
+            
       if git merge github/master --no-edit --no-commit; then
         echo "Merge completed successfully"
         git commit -m "Auto-merge from GitHub [skip ci]"
