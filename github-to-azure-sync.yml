@@ -24,6 +24,13 @@ steps:
       echo Fetching from GitHub...
       git fetch github
 
+      echo Checking last commit origin...
+      git log -1 --pretty=%B | findstr /C:"[azdo-sync]" >nul
+      if %ERRORLEVEL% equ 0 (
+        echo ##vso[task.logissue type=warning]Skipping sync - changes originated from Azure DevOps
+        exit 0
+      )
+
       echo Preparing local branch...
       git checkout master 2>nul || git checkout -b master
 
@@ -32,12 +39,13 @@ steps:
 
       if %ERRORLEVEL% equ 0 (
         echo Merge successful
-        git commit -m "Auto-merge from GitHub [skip ci]"
+        git commit -m "Auto-merge from GitHub [skip ci] [gh-sync]"
         git push origin HEAD:master
       ) else (
         echo ##vso[task.logissue type=warning]Merge conflict detected
         git merge --abort
         git reset --hard github/master
+        git commit -m "Force sync from GitHub [skip ci] [gh-sync]" --allow-empty
         git push origin HEAD:master --force-with-lease
       )
     displayName: 'Sync from GitHub to Azure'
