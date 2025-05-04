@@ -3,7 +3,6 @@ variables:
 
 steps:
   - checkout: none # Disable automatic checkout
-    persistCredentials: true
     fetchDepth: 0  # Get full history for proper merging
 
   - script: |
