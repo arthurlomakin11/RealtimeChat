@@ -10,7 +10,8 @@ steps:
       git config --global user.email "arthurlomakin11@gmail.com"
       git config --global user.name "Azure DevOps Sync"
         
-      git remote add github https://$(GITHUB_TOKEN)@github.com/arthurlomakin11/RealtimeChat.git || echo "Remote already exists"
+      git remote remove github || true
+      git remote add github https://$(GITHUB_TOKEN)@github.com/arthurlomakin11/RealtimeChat.git
       git fetch github
             
       if git merge github/master --no-edit --no-commit; then
