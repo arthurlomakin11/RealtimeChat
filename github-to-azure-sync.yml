@@ -2,32 +2,44 @@ variables:
   - group: GitHubSecrets
 
 steps:
-  - checkout: none # Disable automatic checkout
-    fetchDepth: 0  # Get full history for proper merging
+  - checkout: self
+    persistCredentials: true
+    fetchDepth: 0
+    clean: true
 
   - script: |
-      echo Configuring Git to disable SSL verification (temporary)...
+      echo Configuring Git...
       git config --global http.sslVerify false
+      git config --global user.email "arthurlomakin11@gmail.com"
+      git config --global user.name "Azure Pipeline"
 
-      echo Cloning Azure DevOps repo (master branch only)...
-      git clone -b master --single-branch https://desktop-ktppcj0:8443/Default/RealtimeChat/_git/RealtimeChat azure-repo
-      cd azure-repo
+      echo Checking repository state...
+      git branch -avv
+      git remote -v
 
-      echo Adding GitHub as remote...
+      echo Setting up GitHub remote...
+      git remote remove github 2>nul
       git remote add github https://$(GITHUB_TOKEN)@github.com/arthurlomakin11/RealtimeChat.git
+
+      echo Fetching from GitHub...
       git fetch github
 
+      echo Preparing local branch...
+      git checkout master 2>nul || git checkout -b master
+
       echo Attempting merge...
-      if git merge github/master --no-edit --no-commit; then
+      git merge github/master --no-edit --no-commit
+
+      if %ERRORLEVEL% equ 0 (
         echo Merge successful
         git commit -m "Auto-merge from GitHub [skip ci]"
-        git push origin master
-      else
-        echo ##vso[task.logissue type=warning]Merge conflict - forcing changes
+        git push origin HEAD:master
+      ) else (
+        echo ##vso[task.logissue type=warning]Merge conflict detected
         git merge --abort
         git reset --hard github/master
-        git push origin master --force-with-lease
-      fi
-    displayName: 'Sync from GitHub (manual clone)'
+        git push origin HEAD:master --force-with-lease
+      )
+    displayName: 'Sync from GitHub to Azure'
     env:
       GITHUB_TOKEN: $(GITHUB_TOKEN)
