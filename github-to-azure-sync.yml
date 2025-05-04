@@ -7,6 +7,9 @@ steps:
     fetchDepth: 0  # Get full history for proper merging
 
   - script: |
+      echo Configuring Git to disable SSL verification (temporary)...
+      git config --global http.sslVerify false
+
       echo Cloning Azure DevOps repo (master branch only)...
       git clone -b master --single-branch https://desktop-ktppcj0:8443/Default/RealtimeChat/_git/RealtimeChat azure-repo
       cd azure-repo
