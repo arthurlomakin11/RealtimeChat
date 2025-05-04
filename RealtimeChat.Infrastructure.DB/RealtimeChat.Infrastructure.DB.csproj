@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
         <TargetFramework>net9.0</TargetFramework>
@@ -7,12 +7,12 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="EFCore.NamingConventions" Version="9.0.0" />
-      <PackageReference Include="EntityFrameworkCore.Exceptions.PostgreSQL" Version="8.1.3" />
-      <PackageReference Include="JsonSubTypes" Version="2.0.1" />
-      <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="9.0.3" />
-      <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.3" />
-      <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.4" />
+      <PackageReference Include="EFCore.NamingConventions" />
+      <PackageReference Include="EntityFrameworkCore.Exceptions.PostgreSQL" />
+      <PackageReference Include="JsonSubTypes" />
+      <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore" />
+      <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" />
     </ItemGroup>
 
     <ItemGroup>
