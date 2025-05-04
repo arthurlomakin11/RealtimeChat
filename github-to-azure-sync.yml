@@ -2,74 +2,28 @@ variables:
   - group: GitHubSecrets
 
 steps:
-  - checkout: self
-    persistCredentials: true
-    fetchDepth: 0
-    clean: true
+  - checkout: none # Disable automatic checkout
 
-  - powershell: |
-      Write-Host "##[group]Starting sync process"
-      Write-Host "Current directory: $(Get-Location)"
-      Write-Host "Git version: $(git --version)"
-      Write-Host "Current git remotes:"
-      git remote -v
+  - script: |
+      echo Cloning Azure DevOps repo (master branch only)...
+      git clone -b master --single-branch https://desktop-ktppcj0:8443/Default/RealtimeChat/_git/RealtimeChat azure-repo
+      cd azure-repo
 
-      # Configure Git identity
-      git config --global user.email "arthurlomakin11@gmail.com"
-      git config --global user.name "Azure DevOps Sync"
-      Write-Host "Git configuration set"
-
-      # Manage GitHub remote
-      try {
-        git remote remove github
-        Write-Host "Removed existing github remote"
-      } catch {
-        Write-Host "No existing github remote found"
-      }
-      
+      echo Adding GitHub as remote...
       git remote add github https://$(GITHUB_TOKEN)@github.com/arthurlomakin11/RealtimeChat.git
-      Write-Host "Added GitHub remote"
-
-      # Fetch changes
       git fetch github
-      Write-Host "Fetched changes from GitHub"
-      Write-Host "Available branches:"
-      git branch -a
 
-      # Attempt merge
-      Write-Host "Attempting merge..."
-      $mergeOutput = git merge github/master --no-edit --no-commit 2>&1 | Out-String
-      
-      if ($LASTEXITCODE -eq 0) {
-        Write-Host "##[section]Merge successful"
-        Write-Host "Merge output: $mergeOutput"
-        
+      echo Attempting merge...
+      if git merge github/master --no-edit --no-commit; then
+        echo Merge successful
         git commit -m "Auto-merge from GitHub [skip ci]"
-        Write-Host "Created merge commit"
-        
-        $pushOutput = git push origin master 2>&1 | Out-String
-        Write-Host "Push output: $pushOutput"
-        Write-Host "##[section]Sync completed successfully"
-      }
-      else {
-        Write-Host "##vso[task.logissue type=warning]Merge conflict detected"
-        Write-Host "Merge output: $mergeOutput"
-        
+        git push origin master
+      else
+        echo ##vso[task.logissue type=warning]Merge conflict - forcing changes
         git merge --abort
-        Write-Host "Merge aborted"
-        
         git reset --hard github/master
-        Write-Host "Reset to GitHub/master state"
-        
-        $forcePushOutput = git push origin master --force 2>&1 | Out-String
-        Write-Host "Force push output: $forcePushOutput"
-        Write-Host "##[section]Sync completed with force push"
-      }
-      
-      # Final status check
-      Write-Host "Final repository status:"
-      git status
-      Write-Host "##[group]Sync process completed"
-    displayName: 'Sync from GitHub (merge or force)'
+        git push origin master --force-with-lease
+      fi
+    displayName: 'Sync from GitHub (manual clone)'
     env:
       GITHUB_TOKEN: $(GITHUB_TOKEN)
