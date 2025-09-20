@@ -1,0 +1,11 @@
+﻿services:
+  realtimechat:
+    build:
+      context: .
+      dockerfile: RealtimeChat.API/Dockerfile
+    image: localhost:5000/realtimechat:latest
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Docker
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    restart: unless-stopped

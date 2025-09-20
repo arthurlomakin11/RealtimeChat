@@ -15,9 +15,12 @@ public static class ObjectExtensions
         {
             throw new Exception("String can't be null or empty");
         }
-            
-        return (options is not null 
-            ? JsonSerializer.Deserialize<T>(jsonString, options)
-            : JsonSerializer.Deserialize<T>(jsonString))!;
+
+        if (options is not null)
+        {
+            return JsonSerializer.Deserialize<T>(jsonString, options)!;
+        }
+
+        return JsonSerializer.Deserialize<T>(jsonString)!;
     }
 }

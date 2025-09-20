@@ -1,0 +1,41 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <TargetFramework>net9.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+        <LangVersion>12</LangVersion>
+      <UserSecretsId>1c6d85db-f2d8-49e5-aae7-923f30bae327</UserSecretsId>
+  </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="AutoMapper.Collection" />
+        <PackageReference Include="AutoMapper.Collection.EntityFrameworkCore" />
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" />
+        <PackageReference Include="Microsoft.AspNetCore.OpenApi" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design">
+          <PrivateAssets>all</PrivateAssets>
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="Microsoft.Extensions.Configuration" />
+        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" />
+        <PackageReference Include="Swashbuckle.AspNetCore.Swagger" />
+        <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" />
+        <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Include="..\.dockerignore">
+        <Link>.dockerignore</Link>
+      </Content>
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\Infrastructure\RealtimeChat.Infrastructure.DB\RealtimeChat.Infrastructure.DB.csproj" />
+      <ProjectReference Include="..\..\Infrastructure\RealtimeChat.Infrastructure.GraphQL\RealtimeChat.Infrastructure.GraphQL.csproj" />
+      <ProjectReference Include="..\..\RealtimeChat.Mapping\RealtimeChat.Mapping.csproj" />
+    </ItemGroup>
+
+</Project>

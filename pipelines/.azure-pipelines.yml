@@ -8,34 +8,67 @@ pool:
 
 variables:
   GIT_SSL_NO_VERIFY: true
+  DOCKER_REGISTRY: 'localhost:5000'
+  APP_NAME: 'realtimechat'
+  DOCKER_HOST: 'npipe:////./pipe/docker_engine'
+  DOCKERFILE_PATH: 'RealtimeChat.API/Dockerfile'
+  COMPOSE_FILE: 'docker-compose.yml'
 
 steps:
+  # 1. Git configuration
   - script: |
       echo "Disabling SSL verification for git"
       git config --global http.sslVerify false
-    displayName: 'Disable SSL verification for Git'
+    displayName: 'Configure Git SSL'
 
-  - task: UseDotNet@2
-    inputs:
-      packageType: 'sdk'
-      version: '9.0.203'
-
+  # 2. NuGet restore
   - task: DotNetCoreCLI@2
+    displayName: 'Restore dependencies'
     inputs:
       command: 'restore'
       projects: '**/*.csproj'
 
+  # 3. Build solution
   - task: DotNetCoreCLI@2
+    displayName: 'Build solution'
     inputs:
       command: 'build'
       projects: '**/*.csproj'
+      arguments: '--configuration Release'
 
+  # 4. Publish application
   - task: DotNetCoreCLI@2
+    displayName: 'Publish application'
     inputs:
       command: 'publish'
       projects: '**/*.csproj'
       arguments: '--configuration Release --output $(Build.ArtifactStagingDirectory)'
 
+  # 5. Build Docker image using your multi-stage Dockerfile
+  - task: Docker@2
+    displayName: 'Build Docker image'
+    inputs:
+      command: 'build'
+      repository: $(APP_NAME)
+      dockerfile: $(DOCKERFILE_PATH)
+      tags: 'latest'
+      arguments: '--build-arg BUILD_CONFIGURATION=Release'
+
+  # 6. Push to local registry
+  - script: |
+      docker tag $(APP_NAME):latest $(DOCKER_REGISTRY)/$(APP_NAME):latest
+      docker push $(DOCKER_REGISTRY)/$(APP_NAME):latest
+    displayName: 'Push Docker image'
+
+  # 7. Deploy using compose
+  - script: |
+      docker-compose -f $(COMPOSE_FILE) down
+      docker-compose -f $(COMPOSE_FILE) up -d
+    displayName: 'Deploy containers'
+    env:
+      DOCKER_HOST: $(DOCKER_HOST)
+
+  # 8. Publish artifacts
   - task: PublishBuildArtifacts@1
     inputs:
       PathtoPublish: '$(Build.ArtifactStagingDirectory)'

@@ -12,8 +12,8 @@
 
     <ItemGroup>
       <ProjectReference Include="..\RealtimeChat.Domain\RealtimeChat.Domain.csproj" />
-      <ProjectReference Include="..\RealtimeChat.Persistence.DB\RealtimeChat.Persistence.DB.csproj" />
-      <ProjectReference Include="..\RealtimeChat.Persistence.GraphQL\RealtimeChat.Persistence.GraphQL.csproj" />
+      <ProjectReference Include="..\Infrastructure\RealtimeChat.Infrastructure.DB\RealtimeChat.Infrastructure.DB.csproj" />
+      <ProjectReference Include="..\Infrastructure\RealtimeChat.Infrastructure.GraphQL\RealtimeChat.Infrastructure.GraphQL.csproj" />
     </ItemGroup>
 
 </Project>
